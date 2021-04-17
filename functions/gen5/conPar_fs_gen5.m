@@ -1,0 +1,83 @@
+function [f1,f2,f3,f4,f5,f6,f7,f8,f9,xs] = conPar_fs_gen5(x,Prob)
+u0 = Prob.user.u0;
+x0 = Prob.user.x0;
+delta = Prob.user.delta;
+
+cprod = Prob.user.cprod;
+csale = Prob.user.csale;
+Pload = Prob.user.Pload;
+Pres = Prob.user.Pres;
+cbuy = Prob.user.cbuy;
+Pload0 = Prob.user.Pload0;
+Pres0 = Prob.user.Pres0;
+csale0 = Prob.user.csale0;
+cbuy0 = Prob.user.cbuy0;
+
+mA = Prob.user.mA;
+mB1 = Prob.user.mB1;
+mB2 = Prob.user.mB2;
+mB3 = Prob.user.mB3;
+
+cs = Prob.user.cs;
+
+xub = Prob.user.xub;
+xlb = Prob.user.xlb;
+
+uub = Prob.user.uub;
+
+N = Prob.user.N;
+
+zdM = [1 0 0 0;0 0 0 1];
+zuM = [1 0 0 0;0 0 0 1];
+
+f1 = zeros(N,1);
+f2 = zeros(N,1);
+f3 = zeros(N,1);
+f4 = zeros(N,1);
+f5 = zeros(N,1);
+f6 = zeros(N,1);
+f7 = zeros(N,1);
+f8 = zeros(N,1);
+f9 = zeros(N,1);
+
+f1(1) = csale(1)-cprod(1);
+f2(1) = uub(3)*(csale(1)*cbuy0-0.5)*(cbuy(1)-1);
+f3(1) = (2*cbuy0+Pres(1))*(cbuy0+x0+Pres(1)+uub(4));
+
+f4(1) = csale(1);
+f5(1) = cprod(1)^2-cprod(1)*ulb(1);
+f6(1) = cprod(1);
+
+
+xs = x0;
+u4 = x(1)*f1(1) + x(2)*f2(1) + x(3) * f3(1);
+u2 = f4(1)*x(4) + x(5)*f5(1) + x(6)*f6(1);
+u3 = f4(1)*x(7) + x(8)*f5(1) + x(9)*f6(1);
+
+u1 = u4+u2+u3+Pres(1)-Pload(1);
+
+U = [u1;u2;u2;u4;zeros((N-1)*4,1)];
+
+for i = 1:N-1
+    ru = 4*(i-1)+1:4*(i-1)+4;
+    rd = 4*(i-1)+1:4*(i-1)+4;
+    xs = mA*xs + mB1 * U(ru) + mB2*delta(rd) + mB3*((zdM*delta(rd)).*(zuM*U(ru)));
+    
+    f1(i+1) = csale(i+1)-cprod(i+1);
+    f2(i+1) = uub(3)*(csale(i+1)*cbuy(i)-0.5)*(cbuy(i+1)-1);
+    f3(i+1) = (2*cbuy(i)+Pres(i+1))*(cbuy(i)+xs+Pres(i+1)+uub(4));
+
+    f4(i+1) = csale(i+1);
+    f5(i+1) = cprod(i+1)^2-cprod(i+1)*ulb(1);
+    f6(i+1) = cprod(i+1);
+
+    u4 = x(1)*f1(i+1) + x(2)*f2(i+1) + x(3) * f3(i+1);
+    u2 = f4(i+1)*x(4) + x(5)*f5(i+1) + x(6)*f6(i+1);
+    u3 = f4(i+1)*x(7) + x(8)*f5(i+1) + x(9)*f6(i+1);
+    
+    u1 = u4+u2+u3+Pres(i+1)-Pload(i+1);
+
+    U(ru+4) = [u1;u2;u3;u4];
+end
+
+end

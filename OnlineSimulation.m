@@ -33,10 +33,10 @@ Pload = Pload(1:dt/15:end);
 
 %%
 %create controller and microgrid classes
-mgsim = microgrid(2,dt,0.9,0.9,500,0,-150,150,160,20,-1000,1000,x0);
-mgsim3 = microgrid(2,dt,0.9,0.9,500,0,-150,150,160,20,-1000,1000,x0);
-mgsim4 = microgrid(2,dt,0.9,0.9,500,0,-150,150,160,20,-1000,1000,x0);
-mgctr = microgrid(2,dtC,0.9,0.9,500,0,-150,150,160,20,-1000,1000,x0);
+mgsim = microgrid(2,dt,0.9,0.9,500,0,-150,150,250,20,-1000,1000,x0);
+mgsim3 = microgrid(2,dt,0.9,0.9,500,0,-150,150,250,20,-1000,1000,x0);
+mgsim4 = microgrid(2,dt,0.9,0.9,500,0,-150,150,250,20,-1000,1000,x0);
+mgctr = microgrid(2,dtC,0.9,0.9,500,0,-150,150,250,20,-1000,1000,x0);
 
 simC1 = simulation(mgsim,dt,cs,cb,cp,Pload,Pres,24*3600/dt,'Regular MPC');
 controller = microgridMPCController(mgctr,N);

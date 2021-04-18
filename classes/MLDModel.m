@@ -174,6 +174,7 @@ classdef MLDModel < handle
             C = [xkp1 == obj.A * obj.x + obj.B1 * u + obj.B2 * delta + obj.B3 * z + obj.B4]; %#ok<*NBRAK>
             C = [C, obj.E1 * obj.x + obj.E2* u + obj.E3 * delta + obj.E4 * z <= obj.g5];
             C = [C,obj.xlb <= xkp1 <= obj.xub];
+            C = [C,obj.ulb <= u <= obj.uub];
             C = [C,obj.zlb <= z <= obj.zub]; 
             
             sol = optimize(C,[],opts);
